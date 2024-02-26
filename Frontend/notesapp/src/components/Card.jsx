@@ -1,33 +1,33 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import { Button } from '@mui/material';
+import './Card.css'
 
 export default function MediaCard(props) {
+  const handleClick = ()=>{
+    // console.log("Clicked");
+    alert("Clicked");
+  }
   return (
-    <div className={props.className}>
-    <Card sx={{ maxWidth: 345 }}>
-      <CardMedia
-        sx={{ height: 140 }}
-        image="/static/images/cards/contemplative-reptile.jpg"
-        title="green iguana"
-      />
-      <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
-          Lizard
+    <div onClick={handleClick} className={props.className}>
+    <Card sx={{}}>
+      <CardContent className='text'>
+        <Typography gutterBottom variant="a" color={'black'} component="div">
+          {props.data.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
+          {/* {props.data.description} */}
+          {props.data.description.length > 100 ? props.data.description.slice(0, 100) + '...' : props.data.description}
+          {props.data.description.length<100 && <><br/><br/></>}
+          
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
-      </CardActions>
+      {/* <CardActions>
+        <OpenWithIcon color='primary' className='position' onClick={handleClick}/>
+        
+      </CardActions> */}
     </Card>
     </div>
   );

@@ -1,13 +1,23 @@
 .row {
+  position: relative;
   display: flex;
-  flex-wrap: wrap; /* Allow items to wrap to the next line */
+  flex-wrap: wrap;
 }
 
 .element {
-  flex: 0 0 auto; /* Let the items grow and shrink according to available space */
+  flex: 0 0 auto;
   margin: 5px;
 }
 .container{
-  margin-left: 5%;
-  margin-top: 50px;
+  margin: 50px;
+}
+
+.width {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .width {
+    width: 33%;
+  }
 }

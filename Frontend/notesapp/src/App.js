@@ -13,15 +13,15 @@ const darkTheme = createTheme({
 
 function App() {
   return (
+    // <ThemeProvider theme={darkTheme}>
     <BrowserRouter>
-      <ThemeProvider theme={darkTheme}>
         <Navbar />
-      </ThemeProvider>
-      <Routes>
-        <Route exact path="/" element={<Home />} />
-        <Route exact path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+        <Routes>
+          <Route exact path="/" element={<Home />} />
+          <Route exact path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    // </ThemeProvider>
   );
 }
 
