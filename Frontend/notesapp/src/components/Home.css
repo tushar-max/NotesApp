@@ -1,0 +1,13 @@
+.row {
+  display: flex;
+  flex-wrap: wrap; /* Allow items to wrap to the next line */
+}
+
+.element {
+  flex: 0 0 auto; /* Let the items grow and shrink according to available space */
+  margin: 5px;
+}
+.container{
+  margin-left: 5%;
+  margin-top: 50px;
+}
