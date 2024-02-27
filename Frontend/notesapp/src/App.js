@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./components/Home";
 import NotFound from "./components/NotFound";
 import Navbar from "./components/Navbar";
+import Editor from "./components/Editor";
+import { ThemeProvider, createTheme } from "@mui/material";
 
 // const darkTheme = createTheme({
 //   palette: {
@@ -17,6 +19,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route exact path="/" element={<Home />} />
+          <Route exact path="/editor" element={<Editor/>} />
           <Route exact path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
