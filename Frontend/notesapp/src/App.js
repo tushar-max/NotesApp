@@ -1,10 +1,10 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./components/Home";
+import Home from "./components/Home/Home";
 import NotFound from "./components/NotFound";
 import Navbar from "./components/Navbar";
-import Editor from "./components/Editor";
 import { ThemeProvider, createTheme } from "@mui/material";
+import Editor from "./components/Editor/Editor";
 
 // const darkTheme = createTheme({
 //   palette: {
