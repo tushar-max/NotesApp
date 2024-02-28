@@ -3,14 +3,15 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import './Card.css'
+import Editor from '../Editor/Editor';
+import { useState } from 'react';
 
 export default function MediaCard(props) {
-  const handleClick = ()=>{
-    // console.log("Clicked");
-    alert("Clicked");
+  const handleClick = (id)=>{
+    console.log(id);
   }
   return (
-    <div onClick={handleClick} className={props.className}>
+    <div onClick={()=>handleClick(props.data._id)} className={props.className}>
     <Card sx={{}}>
       <CardContent className='text'>
         <Typography gutterBottom variant="a" color={'black'} component="div">
@@ -28,6 +29,7 @@ export default function MediaCard(props) {
         
       </CardActions> */}
     </Card>
+    {/* <Editor description={props.data.description}/> */}
     </div>
   );
 }

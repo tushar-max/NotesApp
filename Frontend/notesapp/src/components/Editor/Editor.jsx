@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import ExampleTheme from "../../themes/ExampleTheme";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
@@ -22,7 +22,8 @@ import AutoLinkPlugin from "../../plugins/AutoLinkPlugin";
 import "./Editor.css";
 
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $generateHtmlFromNodes } from '@lexical/html';
+import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
+import { $getRoot, $insertNodes } from 'lexical'
 
 function Placeholder() {
   return <div className="editor-placeholder">Enter some rich text...</div>;
@@ -55,24 +56,39 @@ const saveOnChange = (editor, setHtmlString) => {
     setHtmlString(htmlString);
   });
 };
-
-function MyOnChangePlugin({ onChange }) {
+function MyOnChangePlugin({ onChange,temp }) {
+  const [firstRender, setFirstRender] = useState(true);
   const [editor] = useLexicalComposerContext();
-  const [htmlString, setHtmlString] = useState('');
+  const [htmlString, setHtmlString] = useState(temp);
+
+  const handleOnChange = useCallback((newEditorState) => {
+    onChange(newEditorState);
+  }, [onChange]);
 
   useEffect(() => {
     saveOnChange(editor, setHtmlString);
+    if (firstRender) {
+      editor.update(() => {
+        setFirstRender(false);
+        const parser = new DOMParser();
+        const dom = parser.parseFromString(htmlString, 'text/html');
+      
+        const nodes = $generateNodesFromDOM(editor, dom);
+        console.log("nodes",nodes);
+        $getRoot().select();
+      
+        $insertNodes(nodes);
+      });
+    }
     return editor.registerUpdateListener(({editorState}) => {
-      onChange(editorState);
+      handleOnChange(editorState);
     });
-  }, [editor, onChange]);
+  }, [editor, handleOnChange, htmlString, firstRender]);
 
-  return (
-    <div dangerouslySetInnerHTML={{ __html: htmlString }} />
-  );
+  return null; // Render nothing directly from this component
 }
 
-export default function Editor() {
+export default function Editor(props) {
   const [editorState, setEditorState] = useState();
 
   function onChange(editorState) {
@@ -99,7 +115,7 @@ export default function Editor() {
             <AutoLinkPlugin />
             <ListMaxIndentLevelPlugin maxDepth={7} />
             <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
-            <MyOnChangePlugin onChange={onChange}/>
+            <MyOnChangePlugin onChange={onChange} temp={props}/>
           </div>
         </div>
       </LexicalComposer>
