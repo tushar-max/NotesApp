@@ -1,42 +1,32 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import Editor from '../Editor/Editor';
-import NotFound from '../NotFound';
-import { useEffect } from 'react';
+import * as React from "react";
+import Dialog from "@mui/material/Dialog";
+import Editor from "../Editor/Editor";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { Button, Fab } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 
-// const style = {
-//   position: 'absolute',
-//   top: '50%',
-//   left: '50%',
-//   transform: 'translate(-50%, -50%)',
-//   width: 400,
-//   bgcolor: 'background.paper',
-//   border: '2px solid #000',
-//   boxShadow: 24,
-//   p: 4,
-// };
-
-export default function Popup() {
+export default function Popup(props) {
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
-    <div>
-      <Button onClick={handleOpen}>Open modal</Button>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box>
-          <NotFound/>
-        </Box>
-      </Modal>
-    </div>
+    <React.Fragment>
+      {!props.new && <OpenInNewIcon color='primary' className='position' onClick={handleClickOpen}/>}
+      {props.new && <Button onClick={handleClickOpen}>
+          <Fab color="primary" aria-label="add">
+            <AddIcon />
+          </Fab>
+        </Button>}
+      <Dialog open={open} onClose={handleClose}>
+        <Editor description={props.data.description} id={props.data._id} />
+      </Dialog>
+    </React.Fragment>
   );
 }

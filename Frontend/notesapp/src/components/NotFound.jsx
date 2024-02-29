@@ -1,11 +1,9 @@
-import React, { useEffect } from 'react'
-import Editor from './Editor/Editor'
+import React from 'react'
 
-function NotFound() {
+const NotFound = () => {
   return (
     <div>
       404 Not Found
-      
     </div>
   )
 }

@@ -21,8 +21,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Home />} />
           <Route exact path="/editor" element={<Editor/>} />
-          {/* <Route exact path="*" element={<NotFound />} /> */}
-          <Route exact path="*" element={<Popup />} />
+          <Route exact path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     // </ThemeProvider>

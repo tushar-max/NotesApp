@@ -20,10 +20,15 @@ import ListMaxIndentLevelPlugin from "../../plugins/ListMaxIndentLevelPlugin";
 import CodeHighlightPlugin from "../../plugins/CodeHighlightPlugin";
 import AutoLinkPlugin from "../../plugins/AutoLinkPlugin";
 import "./Editor.css";
-
+import SaveIcon from "@mui/icons-material/Save";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $generateHtmlFromNodes, $generateNodesFromDOM } from '@lexical/html';
-import { $getRoot, $insertNodes } from 'lexical'
+import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
+import { $getRoot, $insertNodes } from "lexical";
+import { Button, Snackbar } from "@mui/material";
+import axios from "axios";
+// import MyOnChangePlugin from "./MyOnChangePlugin";
+
+var res = "";
 
 function Placeholder() {
   return <div className="editor-placeholder">Enter some rich text...</div>;
@@ -49,50 +54,92 @@ const editorConfig = {
   ],
 };
 
+const handleUpdateDB = (props) => {
+  console.log("database", res);
+  alert(res,props.id);
+  const data = {
+    name: "What is Lorem Ipsum?",
+    description: res,
+  };
+  if (props=='') {
+    const response = axios.post("http://localhost:3001/api",data);
+    console.log("response",response);
+  }
+  else{
+    const response = axios.put(`http://localhost:3001/api/${props}`,data);
+    console.log("edited",response);
+  }
+};
+
 const saveOnChange = (editor, setHtmlString) => {
   editor.update(() => {
     const htmlString = $generateHtmlFromNodes(editor, null);
-    console.log('htmlString', htmlString);
+    console.log("htmlString", htmlString);
     setHtmlString(htmlString);
+    res = htmlString;
   });
 };
-function MyOnChangePlugin({ onChange,temp }) {
+function MyOnChangePlugin({ onChange, temp }) {
   const [firstRender, setFirstRender] = useState(true);
   const [editor] = useLexicalComposerContext();
   const [htmlString, setHtmlString] = useState(temp);
 
-  const handleOnChange = useCallback((newEditorState) => {
-    onChange(newEditorState);
-  }, [onChange]);
+  const handleOnChange = useCallback(
+    (newEditorState) => {
+      onChange(newEditorState);
+    },
+    [onChange]
+  );
 
   useEffect(() => {
-    saveOnChange(editor, setHtmlString);
     if (firstRender) {
       editor.update(() => {
         setFirstRender(false);
         const parser = new DOMParser();
-        const dom = parser.parseFromString(htmlString, 'text/html');
-      
+        const dom = parser.parseFromString(htmlString, "text/html");
         const nodes = $generateNodesFromDOM(editor, dom);
-        console.log("nodes",nodes);
+        console.log("nodes", nodes);
         $getRoot().select();
-      
         $insertNodes(nodes);
       });
     }
-    return editor.registerUpdateListener(({editorState}) => {
-      handleOnChange(editorState);
-    });
-  }, [editor, handleOnChange, htmlString, firstRender]);
+  }, [editor, htmlString, firstRender]); // Removed handleOnChange from dependencies
 
-  return null; // Render nothing directly from this component
+  useEffect(() => {
+    if (!firstRender) {
+      return editor.registerUpdateListener(({ editorState }) => {
+        handleOnChange(editorState);
+        saveOnChange(editor, setHtmlString);
+      });
+    }
+  }, [editor, handleOnChange, firstRender]);
+
+  return null;
 }
 
 export default function Editor(props) {
+  const [open, setOpen] = React.useState(false);
   const [editorState, setEditorState] = useState();
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
 
   function onChange(editorState) {
     setEditorState(editorState);
+  }
+
+  const handleSaveButtonClick = ()=>{
+    handleUpdateDB(props.id);
+    // console.log("object")
+    handleClick();
   }
 
   return (
@@ -107,7 +154,6 @@ export default function Editor(props) {
               ErrorBoundary={LexicalErrorBoundary}
             />
             <HistoryPlugin />
-            {/* <TreeViewPlugin /> */}
             <AutoFocusPlugin />
             <CodeHighlightPlugin />
             <ListPlugin />
@@ -115,7 +161,11 @@ export default function Editor(props) {
             <AutoLinkPlugin />
             <ListMaxIndentLevelPlugin maxDepth={7} />
             <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
-            <MyOnChangePlugin onChange={onChange} temp={props}/>
+            <Button onClick={() => handleSaveButtonClick()}>
+              <SaveIcon color="primary" />
+            </Button>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} message="Synced"/>
+            <MyOnChangePlugin onChange={onChange} temp={props.description} />
           </div>
         </div>
       </LexicalComposer>
