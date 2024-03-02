@@ -26,7 +26,8 @@ import { $generateHtmlFromNodes, $generateNodesFromDOM } from "@lexical/html";
 import { $getRoot, $insertNodes } from "lexical";
 import { Button, Snackbar } from "@mui/material";
 import axios from "axios";
-// import MyOnChangePlugin from "./MyOnChangePlugin";
+import ShareIcon from "@mui/icons-material/Share";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 var res = "";
 
@@ -54,20 +55,26 @@ const editorConfig = {
   ],
 };
 
-const handleUpdateDB = (props) => {
+const getEmail = () => {
+  return localStorage.getItem("jwt-email");
+};
+
+const handleUpdateDB = (props, email) => {
+  if (res == "") {
+    alert("Please make some changes to save.");
+    return;
+  }
   console.log("database", res);
-  alert(res,props.id);
   const data = {
-    name: "What is Lorem Ipsum?",
+    email: email ? email : getEmail(),
     description: res,
   };
-  if (props=='') {
-    const response = axios.post("http://localhost:3001/api",data);
-    console.log("response",response);
-  }
-  else{
-    const response = axios.put(`http://localhost:3001/api/${props}`,data);
-    console.log("edited",response);
+  if (props === "") {
+    const response = axios.post("http://localhost:3001/api", data);
+    console.log("response", response);
+  } else {
+    const response = axios.put(`http://localhost:3001/api/${props}`, data);
+    console.log("edited", response);
   }
 };
 
@@ -103,7 +110,7 @@ function MyOnChangePlugin({ onChange, temp }) {
         $insertNodes(nodes);
       });
     }
-  }, [editor, htmlString, firstRender]); // Removed handleOnChange from dependencies
+  }, [editor, htmlString, firstRender]);
 
   useEffect(() => {
     if (!firstRender) {
@@ -125,7 +132,7 @@ export default function Editor(props) {
   };
 
   const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -136,11 +143,26 @@ export default function Editor(props) {
     setEditorState(editorState);
   }
 
-  const handleSaveButtonClick = ()=>{
-    handleUpdateDB(props.id);
-    // console.log("object")
+  const handleSaveButtonClick = () => {
+    handleUpdateDB(props.id, props.email);
     handleClick();
-  }
+    window.location.reload();
+  };
+
+  const handleShareButtonClick = () => {
+    console.log("Share btn clicked!");
+  };
+  const handleDeleteButtonClick = () => {
+    const response = axios.delete(`http://localhost:3001/api/${props.id}`);
+    console.log("response", response);
+    window.location.reload();
+    <Snackbar
+      open={open}
+      autoHideDuration={6000}
+      onClose={handleClose}
+      message="Deleted Successfully"
+    />;
+  };
 
   return (
     <>
@@ -164,7 +186,22 @@ export default function Editor(props) {
             <Button onClick={() => handleSaveButtonClick()}>
               <SaveIcon color="primary" />
             </Button>
-            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} message="Synced"/>
+            {props.email && (
+              <Button onClick={() => handleShareButtonClick()}>
+                <ShareIcon color="primary" />
+              </Button>
+            )}
+            {props.email && (
+              <Button onClick={() => handleDeleteButtonClick()} color="error">
+                <DeleteIcon />
+              </Button>
+            )}
+            <Snackbar
+              open={open}
+              autoHideDuration={6000}
+              onClose={handleClose}
+              message="Synced"
+            />
             <MyOnChangePlugin onChange={onChange} temp={props.description} />
           </div>
         </div>

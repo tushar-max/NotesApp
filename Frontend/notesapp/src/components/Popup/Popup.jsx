@@ -25,7 +25,7 @@ export default function Popup(props) {
           </Fab>
         </Button>}
       <Dialog open={open} onClose={handleClose}>
-        <Editor description={props.data.description} id={props.data._id} />
+        <Editor description={props.data.description} id={props.data._id} email={props.data.email} />
       </Dialog>
     </React.Fragment>
   );

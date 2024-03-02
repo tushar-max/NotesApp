@@ -14,9 +14,9 @@ router.post('/', async (req, res) => {
 });
 
 // Read all
-router.get('/', async (req, res) => {
+router.get('/getAll/:email', async (req, res) => {
   try {
-    const items = await Notes.find();
+    const items = await Notes.find({email:req.params.email});
     res.json(items);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -33,8 +33,6 @@ router.get('/:id', async (req, res) => {
     res.status(404).json({ error: err.message });
   }
 });
-
-// Update
 router.put('/:id', async (req, res) => {
   try {
     const updatedItem = await Notes.findByIdAndUpdate(req.params.id, req.body, { new: true });

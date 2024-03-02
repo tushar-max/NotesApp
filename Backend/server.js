@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const itemRoutes = require('./routes/itemRoutes');
+const sharedRoutes = require('./routes/sharedRoutes');
 const cors = require('cors');
 require('dotenv').config();
 const app = express();
@@ -21,6 +22,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api', itemRoutes);
+app.use('/share',sharedRoutes);
 
 // Start the server
 app.listen(PORT, () => {
