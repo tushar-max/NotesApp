@@ -16,7 +16,7 @@ router.post('/', async (req, res) => {
 // Read all
 router.get('/getAll/:email', async (req, res) => {
   try {
-    const items = await Shared.find({email:req.params.email});
+    const items = await Shared.find({sharedTo:req.params.email});
     res.json(items);
   } catch (err) {
     res.status(500).json({ error: err.message });

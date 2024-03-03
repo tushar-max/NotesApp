@@ -15,6 +15,8 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { GoogleLogin } from "@react-oauth/google";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -59,9 +61,26 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function Navbar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
-
+  const [sharedData, setSharedData] = React.useState([]);
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  React.useEffect(() => {
+    const fetchSharedData = async () => {
+      try {
+        const url = `http://localhost:3001/share/getAll/${localStorage.getItem(
+          "jwt-email"
+        )}`;
+        const response = await axios.get(url);
+        // console.log(console.log(url));
+        // console.log(response.data);
+        setSharedData(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchSharedData();
+  }, []);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -82,6 +101,10 @@ export default function Navbar() {
     isLoggedIn();
     handleMenuClose();
     window.location.reload();
+  };
+
+  const handleShared = () => {
+    window.location.href = "/shared";
   };
 
   const isLoggedIn = () => {
@@ -109,7 +132,9 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Hi, {localStorage.getItem("jwt-name")||"user"}!</MenuItem>
+      <MenuItem onClick={handleMenuClose}>
+        Hi, {localStorage.getItem("jwt-name") || "user"}!
+      </MenuItem>
       <MenuItem onClick={logout} disabled={!isLoggedIn()}>
         Logout
       </MenuItem>
@@ -133,11 +158,14 @@ export default function Navbar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
+      <MenuItem onClick={handleShared}>
         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="error">
-            <MailIcon />
-          </Badge>
+          {sharedData.length > 0 && (
+            <Badge badgeContent={sharedData.length} color="error">
+              <MailIcon />
+            </Badge>
+          )}
+          {sharedData.length == 0 && <MailIcon />}
         </IconButton>
         <p>Messages</p>
       </MenuItem>
@@ -190,7 +218,9 @@ export default function Navbar() {
               component="div"
               sx={{ display: { xs: "none", sm: "block" } }}
             >
-              NotesApp
+              <Link to="/" style={{ color: "white",textDecoration:"none" }}>
+                {"NotesApp"}
+              </Link>
             </Typography>
             <Search>
               <SearchIconWrapper>
@@ -223,9 +253,16 @@ export default function Navbar() {
                 aria-label="show 4 new mails"
                 color="inherit"
               >
-                <Badge badgeContent={4} color="error">
-                  <MailIcon />
-                </Badge>
+                {sharedData.length >= 0 && (
+                  <Badge
+                    onClick={handleShared}
+                    badgeContent={sharedData.length}
+                    color="error"
+                  >
+                    <MailIcon />
+                  </Badge>
+                )}
+                {/* {sharedData.length == 0 && <MailIcon />} */}
               </IconButton>
               <IconButton
                 size="large"

@@ -5,21 +5,13 @@ import Typography from "@mui/material/Typography";
 import "./Card.css";
 import { CardActions } from "@mui/material";
 import Popup from "../Popup/Popup";
+import SharedPopover from "../Popup/SharedPopup";
 
 export default function MediaCard(props) {
-
   return (
     <div className={props.className}>
       <Card sx={{}}>
         <CardContent className="text">
-          <Typography gutterBottom variant="a" color={"black"} component="div">
-            {props.data.name}
-          </Typography>
-          {/* <Typography variant="body2" color="text.secondary">
-          {props.data.description.length > 100 ? props.data.description.slice(0, 100) + '...' : props.data.description}
-          {props.data.description.length<100 && <><br/><br/></>}
-          
-        </Typography> */}
           <Typography variant="body2" color="text.secondary">
             {
               <div
@@ -30,6 +22,7 @@ export default function MediaCard(props) {
         </CardContent>
         <CardActions>
           <Popup data={props.data} />
+          {localStorage.getItem("jwt-email")===props.data.email && <SharedPopover data={props.data}/>}
         </CardActions>
       </Card>
     </div>

@@ -155,13 +155,11 @@ export default function Editor(props) {
   const handleDeleteButtonClick = () => {
     const response = axios.delete(`http://localhost:3001/api/${props.id}`);
     console.log("response", response);
-    window.location.reload();
-    <Snackbar
-      open={open}
-      autoHideDuration={6000}
-      onClose={handleClose}
-      message="Deleted Successfully"
-    />;
+    setOpen(true);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
+    // window.location.reload();
   };
 
   return (
@@ -186,16 +184,12 @@ export default function Editor(props) {
             <Button onClick={() => handleSaveButtonClick()}>
               <SaveIcon color="primary" />
             </Button>
-            {props.email && (
-              <Button onClick={() => handleShareButtonClick()}>
-                <ShareIcon color="primary" />
-              </Button>
-            )}
+            {localStorage.getItem("jwt-email")===props.email &&<>
             {props.email && (
               <Button onClick={() => handleDeleteButtonClick()} color="error">
                 <DeleteIcon />
               </Button>
-            )}
+            )}</>}
             <Snackbar
               open={open}
               autoHideDuration={6000}

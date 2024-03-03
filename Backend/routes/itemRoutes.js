@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const Notes = require('../models/itemModel');
+const Shared = require('../models/shareModel');
 
 // Create
 router.post('/', async (req, res) => {
@@ -46,6 +47,9 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const deletedItem = await Notes.findByIdAndDelete(req.params.id);
+    if(deletedItem){
+      await Shared.deleteMany({sharedBy:deletedItem.email});
+    }
     res.json(deletedItem);
   } catch (err) {
     res.status(400).json({ error: err.message });

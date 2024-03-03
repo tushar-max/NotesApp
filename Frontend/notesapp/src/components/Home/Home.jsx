@@ -27,18 +27,14 @@ const Home = () => {
   const getEmail = ()=>{
     if (isLoggedIn()) {
       const token = localStorage.getItem("jwt-token");
-      // console.log(token);
       const decoded = jwtDecode(token);
-      let date = new Date();
-      if (decoded.exp*1000<date.getTime()) {
-        // console.log("Login session expired.\n Please Login again");
-        alert("Login session expired.\n Please Login again");
-        localStorage.clear();
-      }
-      // console.log(decoded.name);
       localStorage.setItem("jwt-email",decoded.email);
       localStorage.setItem("jwt-name",decoded.name);
-      
+      let date = new Date();
+      if (decoded.exp*1000<date.getTime()) {
+        alert("Login session expired.\n Please Login again");
+        localStorage.clear();
+      }      
       return decoded.email;
     }
     else{
