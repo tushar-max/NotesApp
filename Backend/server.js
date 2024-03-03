@@ -6,11 +6,11 @@ const sharedRoutes = require('./routes/sharedRoutes');
 const cors = require('cors');
 require('dotenv').config();
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = 3001;
 app.use(cors());
 
 // Connect to MongoDB Atlas
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect("mongodb+srv://tusharawasthi722:W8dElii2cyAeR0ie@developmentcluster.ar6hbsi.mongodb.net/?retryWrites=true&w=majority&appName=DevelopmentCluster", {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
