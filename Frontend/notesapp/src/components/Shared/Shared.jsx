@@ -6,7 +6,7 @@ const Shared = () => {
   const [sharedData, setSharedData] = React.useState([]);
   const [sharedContacts, setSharedContacts] = useState([]);
   const getNoteData = async (id) => {
-    const url = `http://localhost:3001/api/${id}`;
+    const url = `https://notesapp-2ev2.onrender.com/api/${id}`;
     const data = await axios.get(url);
     return data.data;
   };
@@ -29,7 +29,7 @@ const Shared = () => {
   useEffect(() => {
     const fetchSharedData = async () => {
       try {
-        const url = `http://localhost:3001/share/getAll/${localStorage.getItem(
+        const url = `https://notesapp-2ev2.onrender.com/share/getAll/${localStorage.getItem(
           "jwt-email"
         )}`;
         const response = await axios.get(url);

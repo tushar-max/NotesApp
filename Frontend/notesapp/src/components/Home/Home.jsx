@@ -45,7 +45,7 @@ const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/api/getAll/${getEmail()}`);
+        const response = await axios.get(`https://notesapp-2ev2.onrender.com/api/getAll/${getEmail()}`);
         setNotes(response.data);
       } catch (error) {
         console.log(error);

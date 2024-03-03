@@ -70,10 +70,10 @@ const handleUpdateDB = (props, email) => {
     description: res,
   };
   if (props === "") {
-    const response = axios.post("http://localhost:3001/api", data);
+    const response = axios.post("https://notesapp-2ev2.onrender.com/api", data);
     console.log("response", response);
   } else {
-    const response = axios.put(`http://localhost:3001/api/${props}`, data);
+    const response = axios.put(`https://notesapp-2ev2.onrender.com/api/${props}`, data);
     console.log("edited", response);
   }
 };
@@ -153,7 +153,7 @@ export default function Editor(props) {
     console.log("Share btn clicked!");
   };
   const handleDeleteButtonClick = () => {
-    const response = axios.delete(`http://localhost:3001/api/${props.id}`);
+    const response = axios.delete(`https://notesapp-2ev2.onrender.com/api/${props.id}`);
     console.log("response", response);
     setOpen(true);
     setTimeout(() => {

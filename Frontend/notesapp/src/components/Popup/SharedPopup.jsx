@@ -39,7 +39,7 @@ export default function SharedPopover(props) {
         sharedBy: localStorage.getItem("jwt-email"),
       };
       console.log(data);
-      const response = await axios.post("http://localhost:3001/share",data);
+      const response = await axios.post("https://notesapp-2ev2.onrender.com/share",data);
       console.log(response.data);
     }
     setEmail("");

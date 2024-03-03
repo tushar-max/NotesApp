@@ -68,7 +68,7 @@ export default function Navbar() {
   React.useEffect(() => {
     const fetchSharedData = async () => {
       try {
-        const url = `http://localhost:3001/share/getAll/${localStorage.getItem(
+        const url = `https://notesapp-2ev2.onrender.com/share/getAll/${localStorage.getItem(
           "jwt-email"
         )}`;
         const response = await axios.get(url);
