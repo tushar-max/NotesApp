@@ -46,6 +46,8 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`https://notesapp-2ev2.onrender.com/api/getAll/${getEmail()}`);
+        // console.log(getEmail());
+        // console.log(response.data);
         setNotes(response.data);
       } catch (error) {
         console.log(error);

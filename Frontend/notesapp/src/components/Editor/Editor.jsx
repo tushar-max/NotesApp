@@ -71,10 +71,12 @@ const handleUpdateDB = (props, email) => {
   };
   if (props === "") {
     const response = axios.post("https://notesapp-2ev2.onrender.com/api", data);
-    console.log("response", response);
+    console.log("response", response.data);
+    alert("Added notes successfully");
   } else {
     const response = axios.put(`https://notesapp-2ev2.onrender.com/api/${props}`, data);
-    console.log("edited", response);
+    console.log("edited", response.data);
+    alert("Edited data successfully");
   }
 };
 
